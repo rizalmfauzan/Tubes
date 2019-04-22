@@ -49,7 +49,7 @@ void createListRelation (listRelation &LE);
 /** ALLOCATION */
 adrR roleAllocation (int ID, string role);
 adrH heroAllocation (int ID, string hero);
-adrE relateAllocation (int ID);
+adrE relateAllocation (adrH H);
 
 /** DEALLOCATION*/
 void deallocateRole (adrR &R);
@@ -84,7 +84,7 @@ adrH searchIDhero (listHero LH, int ID);
 void insertFirstRelation (listRelation &LE, adrE E);
 void insertLastRelation (listRelation &LE, adrE E);     //Do we need this?
 void insertAfterRelation (listRelation &LE, adrE precE, adrE E);    //Do we need this?
-void insertRelation (adrR R);
+void insertRelation (adrR R, adrE E);
 
 /** DELETE RELATION*/
 void deleteFirstRelation (listRelation &LE, adrE &E);
@@ -95,5 +95,8 @@ void deleteRelation (adrR R);
 /** PRINT INFO*/
 void displayRole (listRole LR);
 void displayHero (listHero LH);
+
+/** CONNECTION */
+void connection (listRole LR, listHero LH);
 
 #endif // MULTI_H_INCLUDED

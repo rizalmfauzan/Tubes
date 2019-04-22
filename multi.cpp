@@ -36,10 +36,10 @@ adrH heroAllocation (int ID, string hero) {
     return H;
 }
 
-adrE relateAllocation (int ID) {
+adrE relateAllocation (adrH H) {
     adrE E = new Relation;
     E->nextRelate = NULL;
-    E->toHero = NULL;
+    E->toHero = H;
     return E;
 }
 
@@ -86,9 +86,46 @@ void insertAfterRole (listRole &LR, adrR precR, adrR R) {
 }
 
 /** DELETE ROLE */
-void deleteFirstRole (listRole &LR, adrR &R);
-void deleteLastRole (listRole &LR, adrR &R);
-void deleteAfterRole (listRole &LR, adrR precR, adrR &R);
+void deleteFirstRole (listRole &LR, adrR &R) {
+    if (LR.firstRole != NULL) {
+        R = LR.firstRole;
+        if (LR.firstRole == LR.lastRole) {
+            LR.firstRole = NULL;
+            LR.lastRole = NULL;
+        } else {
+            LR.firstRole = R->nextRole;
+            R->nextRole = NULL;
+        }
+    }
+}
+
+void deleteLastRole (listRole &LR, adrR &R) {
+    if (LR.firstRole != NULL) {
+        R = LR.lastRole;
+        if (LR.firstRole == LR.lastRole) {
+            deleteFirstRole(LR,R);
+        } else {
+            adrR P = LR.firstRole;
+            while (P->nextRole != LR.lastRole) {
+                P = P->nextRole;
+            }
+            LR.lastRole = P;
+            LR.lastRole->nextRole = NULL;
+        }
+    }
+}
+
+void deleteAfterRole (listRole &LR, adrR precR, adrR &R) {
+    if (LR.firstRole != NULL && precR != LR.lastRole) {
+        R = precR->nextRole;
+        if (R == LR.lastRole) {
+            deleteLastRole(LR,R);
+        } else {
+            precR->nextRole = R->nextRole;
+            R->nextRole = NULL;
+        }
+    }
+}
 
 /** INSERT HERO */
 void insertFirstHero (listHero &LH, adrH H);
@@ -101,14 +138,39 @@ void deleteLastHero (listHero &LH, adrH &H);
 void deleteAfterHero (listHero &LH, adrH precH, adrH &H);
 
 /** SEARCH BY ID*/
-adrR searchIDrole (listRole LR, int ID);
-adrH searchIDhero (listHero LH, int ID);
+adrR searchIDrole (listRole LR, int ID) {
+    adrR R = LR.firstRole;
+    while (R != NULL && R->IDr != ID) {
+        R = R->nextRole;
+    }
+    return R;
+}
+
+adrH searchIDhero (listHero LH, int ID) {
+    adrH H = LH.firstHero;
+    while (H != NULL && H->IDh != ID) {
+        H = H->nextHero;
+    }
+    return H;
+}
 
 /** INSERT RELATION*/
-void insertFirstRelation (listRelation &LE, adrE E);
+void insertFirstRelation (listRelation &LE, adrE E) {
+    if (LE.firstRelate == NULL) {
+        LE.firstRelate = E;
+        LE.lastRelate = E;
+    } else {
+        E->nextRelate = LE.firstRelate;
+        LE.firstRelate = E;
+    }
+}
+
 void insertLastRelation (listRelation &LE, adrE E);     //Do we need this?
 void insertAfterRelation (listRelation &LE, adrE precE, adrE E);    //Do we need this?
-void insertRelation (adrR R);
+
+void insertRelation (adrR R, adrE E) {
+    insertFirstRelation(R->Relate, E);
+}
 
 /** DELETE RELATION*/
 void deleteFirstRelation (listRelation &LE, adrE &E);
@@ -117,5 +179,31 @@ void deleteAfterRelation (listRelation &LE, adrE precE, adrE &E);
 void deleteRelation (adrR R);
 
 /** PRINT INFO*/
-void displayRole (listRole LR);
+void displayRole (listRole LR) {
+    adrR R = LR.firstRole;
+    cout<<"Role List: "<<endl;
+    cout<<"==============================================="<<endl;
+    while (R != NULL) {
+        cout<<"ID Role:\t"<<R->IDr<<endl;
+        cout<<"Role name:\t"<<R->roleName<<endl;
+        cout<<"==============================================="<<endl;
+        R = R->nextRole;
+    }
+}
+
 void displayHero (listHero LH);
+
+/** CONNECTION */
+void connection (listRole LR, listHero LH) {
+    int IDr, IDh;
+    cout<<"Input Role ID: "; cin >> IDr;
+    cout<<"Input Hero ID: "; cin >> IDh;
+    adrR R = searchIDrole(LR,IDr);
+    adrH H = searchIDhero(LH,IDh);
+    if (R != NULL && H != NULL) {
+        adrE E = relateAllocation(H);
+        insertRelation(R,E);
+    } else {
+        cout<<"Role or Hero not found"<<endl;
+    }
+}
