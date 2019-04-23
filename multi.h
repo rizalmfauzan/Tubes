@@ -1,6 +1,22 @@
 #ifndef MULTI_H_INCLUDED
 #define MULTI_H_INCLUDED
 
+#define firstRole(LR)   LR.firstRole
+#define lastRole(LR)    LR.lastRole
+#define firstHero(LH)   LH.firstHero
+#define lastHero(LH)    LH.lastHero
+#define firstRelate(LE) LE.firstRelate
+#define lastRelate(LE)  LE.lastRelate
+#define IDr(R)          R->IDr
+#define roleName(R)     R->roleName
+#define nextRole(R)     R->nextRole
+#define Relate(R)       R->Relate
+#define IDh(H)          H->IDh
+#define heroName(H)     H->heroName
+#define nextHero(H)     H->nextHero
+#define nextRelate(E)   E->nextRelate
+#define toHero(E)       E->toHero
+
 #include <iostream>
 using namespace std;
 
@@ -60,21 +76,25 @@ void deallocateRelation (adrE &E);
 void insertFirstRole (listRole &LR, adrR R);
 void insertLastRole (listRole &LR, adrR R);
 void insertAfterRole (listRole &LR, adrR precR, adrR R);
+void insertRole ();
 
 /** DELETE ROLE */
 void deleteFirstRole (listRole &LR, adrR &R);
 void deleteLastRole (listRole &LR, adrR &R);
 void deleteAfterRole (listRole &LR, adrR precR, adrR &R);
+void deleteRole ();
 
 /** INSERT HERO */
 void insertFirstHero (listHero &LH, adrH H);
 void insertLastHero (listHero &LH, adrH H);
 void insertAfterHero (listHero &LH, adrH precH, adrH H);
+void insertHero ();
 
 /** DELETE HERO */
 void deleteFirstHero (listHero &LH, adrH &H);
 void deleteLastHero (listHero &LH, adrH &H);
 void deleteAfterHero (listHero &LH, adrH precH, adrH &H);
+void deleteHero ();
 
 /** SEARCH BY ID*/
 adrR searchIDrole (listRole LR, int ID);
@@ -95,8 +115,15 @@ void deleteRelation (adrR R);
 /** PRINT INFO*/
 void displayRole (listRole LR);
 void displayHero (listHero LH);
+void displayAll ();
+void displayHeroOfRole ();
 
 /** CONNECTION */
 void connection (listRole LR, listHero LH);
+void checkConnect ();
+void disConnect ();
+
+/** MISC */
+bool duplicateCheck ();
 
 #endif // MULTI_H_INCLUDED
