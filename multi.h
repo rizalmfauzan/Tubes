@@ -96,14 +96,13 @@ void deleteLastHero (listHero &LH, adrH &H);
 void deleteAfterHero (listHero &LH, adrH precH, adrH &H);
 void deleteHero ();
 
-/** SEARCH BY ID*/
+/** SEARCH*/
 adrR searchIDrole (listRole LR, int ID);
 adrH searchIDhero (listHero LH, int ID);
+adrE searchRelation ();
 
 /** INSERT RELATION*/
 void insertFirstRelation (listRelation &LE, adrE E);
-void insertLastRelation (listRelation &LE, adrE E);     //Do we need this?
-void insertAfterRelation (listRelation &LE, adrE precE, adrE E);    //Do we need this?
 void insertRelation (adrR R, adrE E);
 
 /** DELETE RELATION*/
@@ -113,10 +112,13 @@ void deleteAfterRelation (listRelation &LE, adrE precE, adrE &E);
 void deleteRelation (adrR R);
 
 /** PRINT INFO*/
-void displayRole (listRole LR);
-void displayHero (listHero LH);
-void displayAll ();
-void displayHeroOfRole ();
+void displayRole (adrR R);
+void displayAllRole (listRole LR);
+void displayHero (adrH H);
+void displayAllHero (listHero LH);
+void heroOfRole (adrR R);
+void displayHeroOfRole (listRole LR);
+void displayAll (listRole LR);
 
 /** CONNECTION */
 void connection (listRole LR, listHero LH);
@@ -124,6 +126,7 @@ void checkConnect ();
 void disConnect ();
 
 /** MISC */
-bool duplicateCheck ();
+bool duplicateCheckRole (listRole LR, adrR R);
+bool duplicateCheckHero (listHero LH, adrR H);
 
 #endif // MULTI_H_INCLUDED

@@ -16,6 +16,7 @@ void createListRelation (listRelation &LE) {
     LE.lastRelate = NULL;
 }
 
+
 /** ALLOCATION */
 adrR roleAllocation (int ID, string role) {
     adrR R = new Role;
@@ -43,6 +44,7 @@ adrE relateAllocation (adrH H) {
     return E;
 }
 
+
 /** DEALLOCATION*/
 void deallocateRole (adrR &R) {
     delete R;
@@ -55,6 +57,7 @@ void deallocateHero (adrH &H) {
 void deallocateRelation (adrE &E) {
     delete E;
 }
+
 
 /** INSERT ROLE */
 void insertFirstRole (listRole &LR, adrR R) {
@@ -84,6 +87,36 @@ void insertAfterRole (listRole &LR, adrR precR, adrR R) {
         precR->nextRole = R;
     }
 }
+
+void insertRole (listRole &LR) {
+    int X;
+    string nama;
+    cout<<"Masukkan ID: "; cin>>X;
+    cout<<"Masukkan nama Role: "; cin>>nama;
+    adrR R = roleAllocation(X,nama);
+    if (!duplicateCheckRole(LR,R)) {
+        if (LR.firstRole == NULL) {
+            insertFirstRole(LR,R);
+        } else {
+            adrR P = LR.firstRole;
+            while (P!= NULL && R->IDr > P->IDr) {
+                P = P->nextRole;
+            }
+            if (P == LR.firstRole) {
+                insertFirstRole(LR,R);
+            } else if (P == NULL) {
+                insertLastRole(LR,R);
+            } else {
+                adrR Q = LR.firstRole;
+                while (Q->nextRole != P) {
+                    Q = Q->nextRole;
+                }
+                insertAfterRole(LR,Q,R);
+            }
+        }
+    }
+}
+
 
 /** DELETE ROLE */
 void deleteFirstRole (listRole &LR, adrR &R) {
@@ -127,17 +160,20 @@ void deleteAfterRole (listRole &LR, adrR precR, adrR &R) {
     }
 }
 
+
 /** INSERT HERO */
 void insertFirstHero (listHero &LH, adrH H);
 void insertLastHero (listHero &LH, adrH H);
 void insertAfterHero (listHero &LH, adrH precH, adrH H);
+
 
 /** DELETE HERO */
 void deleteFirstHero (listHero &LH, adrH &H);
 void deleteLastHero (listHero &LH, adrH &H);
 void deleteAfterHero (listHero &LH, adrH precH, adrH &H);
 
-/** SEARCH BY ID*/
+
+/** SEARCH*/
 adrR searchIDrole (listRole LR, int ID) {
     adrR R = LR.firstRole;
     while (R != NULL && R->IDr != ID) {
@@ -154,6 +190,7 @@ adrH searchIDhero (listHero LH, int ID) {
     return H;
 }
 
+
 /** INSERT RELATION*/
 void insertFirstRelation (listRelation &LE, adrE E) {
     if (LE.firstRelate == NULL) {
@@ -165,12 +202,10 @@ void insertFirstRelation (listRelation &LE, adrE E) {
     }
 }
 
-void insertLastRelation (listRelation &LE, adrE E);     //Do we need this?
-void insertAfterRelation (listRelation &LE, adrE precE, adrE E);    //Do we need this?
-
 void insertRelation (adrR R, adrE E) {
     insertFirstRelation(R->Relate, E);
 }
+
 
 /** DELETE RELATION*/
 void deleteFirstRelation (listRelation &LE, adrE &E);
@@ -178,20 +213,61 @@ void deleteLastRelation (listRelation &LE, adrE &E);
 void deleteAfterRelation (listRelation &LE, adrE precE, adrE &E);
 void deleteRelation (adrR R);
 
+
 /** PRINT INFO*/
-void displayRole (listRole LR) {
-    adrR R = LR.firstRole;
-    cout<<"Role List: "<<endl;
+void displayRole(adrR R) {
+    cout<<"ID Role:\t"<<R->IDr<<endl;
+    cout<<"Role name:\t"<<R->roleName<<endl;
     cout<<"==============================================="<<endl;
+}
+
+void displayAllRole (listRole LR) {
+    adrR R = LR.firstRole;
+    cout<<"Role List: "<<endl<<endl;
     while (R != NULL) {
-        cout<<"ID Role:\t"<<R->IDr<<endl;
-        cout<<"Role name:\t"<<R->roleName<<endl;
-        cout<<"==============================================="<<endl;
+        displayRole(R);
+        R = R->nextRole;
+    }
+    cout<<endl;
+}
+
+void displayHero(adrH H) {
+    cout<<"ID Hero:\t"<<H->IDh<<endl;
+    cout<<"Hero name:\t"<<H->heroName<<endl;
+    cout<<"==============================================="<<endl;
+}
+
+void displayAllHero (listHero LH);
+
+void heroOfRole (adrR R) {
+    adrE E = R->Relate.firstRelate;
+    while (E != NULL) {
+        adrH H = E->toHero;
+        displayHero(H);
+        E = E->nextRelate;
+    }
+}
+
+void displayHeroOfRole (listRole LR) {
+    int X;
+    cout<<"Masukkan ID Role yang akan ditampilkan: "; cin>>X;
+    adrR R = searchIDrole(LR,X);
+    displayRole(R);
+    cout<<"List Hero:"<<endl<<endl;
+    heroOfRole(R);
+}
+
+void displayAll (listRole LR) {
+    adrR R = LR.firstRole;
+    while (R != NULL) {
+        displayRole(R);
+        cout<<"List Hero:"<<endl<<endl;
+        heroOfRole(R);
+        cout<<endl;
         R = R->nextRole;
     }
 }
 
-void displayHero (listHero LH);
 
 /** CONNECTION */
 void connection (listRole LR, listHero LH) {
@@ -207,3 +283,18 @@ void connection (listRole LR, listHero LH) {
         cout<<"Role or Hero not found"<<endl;
     }
 }
+
+
+/** MISC */
+bool duplicateCheckRole (listRole LR, adrR R) {
+    adrR P = LR.firstRole;
+    while (P != NULL) {
+        if (P->IDr == R->IDr) {
+            return true;
+        }
+        P = P->nextRole;
+    }
+    return true;
+}
+
+bool duplicateCheckHero (listHero LH, adrR H);
