@@ -76,7 +76,7 @@ void deallocateRelation (adrE &E);
 void insertFirstRole (listRole &LR, adrR R);
 void insertLastRole (listRole &LR, adrR R);
 void insertAfterRole (listRole &LR, adrR precR, adrR R);
-void insertRole ();
+void insertRole (listRole &LR);
 
 /** DELETE ROLE */
 void deleteFirstRole (listRole &LR, adrR &R);
@@ -99,17 +99,17 @@ void deleteHero ();
 /** SEARCH*/
 adrR searchIDrole (listRole LR, int ID);
 adrH searchIDhero (listHero LH, int ID);
-adrE searchRelation ();
+adrE searchRelation (adrR R, int IDhero);
 
 /** INSERT RELATION*/
 void insertFirstRelation (listRelation &LE, adrE E);
-void insertRelation (adrR R, adrE E);
+void insertRelation (adrR &R, adrE E);
 
 /** DELETE RELATION*/
 void deleteFirstRelation (listRelation &LE, adrE &E);
 void deleteLastRelation (listRelation &LE, adrE &E);
 void deleteAfterRelation (listRelation &LE, adrE precE, adrE &E);
-void deleteRelation (adrR R);
+void deleteRelation (adrR &R, adrE &E);
 
 /** PRINT INFO*/
 void displayRole (adrR R);
@@ -122,11 +122,11 @@ void displayAll (listRole LR);
 
 /** CONNECTION */
 void connection (listRole LR, listHero LH);
-void checkConnect ();
-void disConnect ();
+bool checkConnect (listRole LR);
+void disConnect (listRole &LR);
 
 /** MISC */
 bool duplicateCheckRole (listRole LR, adrR R);
-bool duplicateCheckHero (listHero LH, adrR H);
+bool duplicateCheckHero (listHero LH, adrH H);
 
 #endif // MULTI_H_INCLUDED

@@ -160,6 +160,32 @@ void deleteAfterRole (listRole &LR, adrR precR, adrR &R) {
     }
 }
 
+void deleteRole (listRole &LR) {
+    int X;
+    cout<<"Masukkan ID Role yang akan dihapus: "; cin>>X;
+    adrR R = searchIDrole(LR,X);
+    if (R != NULL) {
+        while (R->Relate.firstRelate != NULL) {
+            adrE E = R->Relate.firstRelate;
+            deleteFirstRelation(R->Relate,E);
+            deallocateRelation(E);
+        }
+        if (R == LR.firstRole) {
+            deleteFirstRole(LR,R);
+        } else if (R == LR.lastRole) {
+            deleteLastRole(LR,R);
+        } else {
+            adrR P = LR.firstRole;
+            while (P->nextRole != R) {
+                P = P->nextRole;
+            }
+            deleteAfterRole(LR,P,R);
+        }
+    } else {
+        cout<<"Role not found"<<endl;
+    }
+}
+
 
 /** INSERT HERO */
 void insertFirstHero (listHero &LH, adrH H);
@@ -190,6 +216,18 @@ adrH searchIDhero (listHero LH, int ID) {
     return H;
 }
 
+adrE searchRelation (adrR R, int IDhero) {
+    adrE E = R->Relate.firstRelate;
+    while (E != NULL) {
+        adrH H = E->toHero;
+        if (H->IDh == IDhero) {
+            return E;
+        }
+        E = E->nextRelate;
+    }
+    return NULL;
+}
+
 
 /** INSERT RELATION*/
 void insertFirstRelation (listRelation &LE, adrE E) {
@@ -202,16 +240,66 @@ void insertFirstRelation (listRelation &LE, adrE E) {
     }
 }
 
-void insertRelation (adrR R, adrE E) {
+void insertRelation (adrR &R, adrE E) {
     insertFirstRelation(R->Relate, E);
 }
 
 
 /** DELETE RELATION*/
-void deleteFirstRelation (listRelation &LE, adrE &E);
-void deleteLastRelation (listRelation &LE, adrE &E);
-void deleteAfterRelation (listRelation &LE, adrE precE, adrE &E);
-void deleteRelation (adrR R);
+void deleteFirstRelation (listRelation &LE, adrE &E) {
+    if (LE.firstRelate != NULL) {
+        E = LE.firstRelate;
+        if (LE.firstRelate == LE.lastRelate) {
+            LE.firstRelate = NULL;
+            LE.lastRelate = NULL;
+        } else {
+            LE.firstRelate = E->nextRelate;
+            E->nextRelate = NULL;
+        }
+    }
+}
+
+void deleteLastRelation (listRelation &LE, adrE &E) {
+    if (LE.firstRelate != NULL) {
+        E = LE.lastRelate;
+        if (LE.firstRelate == LE.lastRelate) {
+            deleteFirstRelation(LE,E);
+        } else {
+            adrE P = LE.firstRelate;
+            while (P->nextRelate != LE.lastRelate) {
+                P = P->nextRelate;
+            }
+            LE.lastRelate = P;
+            LE.lastRelate->nextRelate = NULL;
+        }
+    }
+}
+
+void deleteAfterRelation (listRelation &LE, adrE precE, adrE &E) {
+    if (LE.firstRelate != NULL && precE != LE.lastRelate) {
+        E = precE->nextRelate;
+        if (E == LE.lastRelate) {
+            deleteLastRelation(LE,E);
+        } else {
+            precE->nextRelate = E->nextRelate;
+            E->nextRelate = NULL;
+        }
+    }
+}
+
+void deleteRelation (adrR &R, adrE &E) {
+    if (E == R->Relate.firstRelate) {
+        deleteFirstRelation(R->Relate,E);
+    } else if (E == R->Relate.lastRelate) {
+        deleteLastRelation(R->Relate,E);
+    } else {
+        adrE P = R->Relate.firstRelate;
+        while (P->nextRelate != E) {
+            P = P->nextRelate;
+        }
+        deleteAfterRelation(R->Relate,P,E);
+    }
+}
 
 
 /** PRINT INFO*/
@@ -237,7 +325,15 @@ void displayHero(adrH H) {
     cout<<"==============================================="<<endl;
 }
 
-void displayAllHero (listHero LH);
+void displayAllHero (listHero LH) {
+    adrH H = LH.firstHero;
+    cout<<"Hero List: "<<endl<<endl;
+    while (H != NULL) {
+        displayHero(H);
+        H = H->nextHero;
+    }
+    cout<<endl;
+}
 
 void heroOfRole (adrR R) {
     adrE E = R->Relate.firstRelate;
@@ -270,7 +366,7 @@ void displayAll (listRole LR) {
 
 
 /** CONNECTION */
-void connection (listRole LR, listHero LH) {
+void connection (listRole &LR, listHero LH) {
     int IDr, IDh;
     cout<<"Input Role ID: "; cin >> IDr;
     cout<<"Input Hero ID: "; cin >> IDh;
@@ -284,6 +380,32 @@ void connection (listRole LR, listHero LH) {
     }
 }
 
+bool checkConnect (listRole LR) {
+    int X, Y;
+    cout<<"Masukkan ID Role: "; cin>>X;
+    cout<<"Masukkan ID Hero: "; cin>>Y;
+    adrR R = searchIDrole(LR,X);
+    adrE E = searchRelation(R,Y);
+    if (E != NULL) {
+        return true;
+    }
+    return false;
+}
+
+void disConnect (listRole &LR) {
+    int X, Y;
+    cout<<"Masukkan ID Role: "; cin>>X;
+    cout<<"Masukkan ID Hero: "; cin>>Y;
+    adrR R = searchIDrole(LR,X);
+    adrE E = searchRelation(R,Y);
+    if (E != NULL) {
+        deleteRelation(R,E);
+        deallocateRelation(E);
+    } else {
+        cout<<"Relation not found"<<endl;
+    }
+}
+
 
 /** MISC */
 bool duplicateCheckRole (listRole LR, adrR R) {
@@ -294,7 +416,16 @@ bool duplicateCheckRole (listRole LR, adrR R) {
         }
         P = P->nextRole;
     }
-    return true;
+    return false;
 }
 
-bool duplicateCheckHero (listHero LH, adrR H);
+bool duplicateCheckHero (listHero LH, adrH H) {
+    adrH P = LH.firstHero;
+    while (P != NULL) {
+        if (P->IDh == H->IDh) {
+            return true;
+        }
+        P = P->nextHero;
+    }
+    return false;
+}
