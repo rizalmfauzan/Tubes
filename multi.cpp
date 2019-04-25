@@ -114,6 +114,8 @@ void insertRole (listRole &LR) {
                 insertAfterRole(LR,Q,R);
             }
         }
+    } else {
+        cout<<"Duplicate ID"<<endl;
     }
 }
 
@@ -188,16 +190,129 @@ void deleteRole (listRole &LR) {
 
 
 /** INSERT HERO */
-void insertFirstHero (listHero &LH, adrH H);
-void insertLastHero (listHero &LH, adrH H);
-void insertAfterHero (listHero &LH, adrH precH, adrH H);
+void insertFirstHero (listHero &LH, adrH H) {
+    if (LH.firstHero == NULL) {
+        LH.firstHero = H;
+        LH.lastHero = H;
+    } else {
+        H->nextHero = LH.firstHero;
+        LH.firstHero = H;
+    }
+}
+
+void insertLastHero (listHero &LH, adrH H) {
+    if (LH.firstHero == NULL) {
+        insertFirstHero(LH,H);
+    } else {
+        LH.lastHero->nextHero = H;
+        LH.lastHero = H;
+    }
+}
+
+void insertAfterHero (listHero &LH, adrH precH, adrH H) {
+    if (precH == LH.lastHero) {
+        insertLastHero(LH,H);
+    } else {
+        H->nextHero = precH->nextHero;
+        precH->nextHero = H;
+    }
+}
+
+void insertHero (listHero &LH) {
+    int X;
+    string nama;
+    cout<<"Masukkan ID: "; cin>>X;
+    cout<<"Masukkan nama Hero: "; cin>>nama;
+    adrH H = heroAllocation(X,nama);
+    if (!duplicateCheckHero(LH,H)) {
+        if (LH.firstHero == NULL) {
+            insertFirstHero(LH,H);
+        } else {
+            adrH P = LH.firstHero;
+            while (P!= NULL && H->IDh > P->IDh) {
+                P = P->nextHero;
+            }
+            if (P == LH.firstHero) {
+                insertFirstHero(LH,H);
+            } else if (P == NULL) {
+                insertLastHero(LH,H);
+            } else {
+                adrH Q = LH.firstHero;
+                while (Q->nextHero != P) {
+                    Q = Q->nextHero;
+                }
+                insertAfterHero(LH,Q,H);
+            }
+        }
+    } else {
+        cout<<"Duplicate ID"<<endl;
+    }
+}
 
 
 /** DELETE HERO */
-void deleteFirstHero (listHero &LH, adrH &H);
-void deleteLastHero (listHero &LH, adrH &H);
-void deleteAfterHero (listHero &LH, adrH precH, adrH &H);
+void deleteFirstHero (listHero &LH, adrH &H) {
+    if (LH.firstHero != NULL) {
+        H = LH.firstHero;
+        if (LH.firstHero == LH.lastHero) {
+            LH.firstHero = NULL;
+            LH.lastHero = NULL;
+        } else {
+            LH.firstHero = H->nextHero;
+            H->nextHero = NULL;
+        }
+    }
+}
 
+void deleteLastHero (listHero &LH, adrH &H) {
+    if (LH.firstHero != NULL) {
+        H = LH.lastHero;
+        if (LH.firstHero == LH.lastHero) {
+            deleteFirstHero(LH,H);
+        } else {
+            adrH P = LH.firstHero;
+            while (P->nextHero != LH.lastHero) {
+                P = P->nextHero;
+            }
+            LH.lastHero = P;
+            LH.lastHero->nextHero = NULL;
+        }
+    }
+}
+
+void deleteAfterHero (listHero &LH, adrH precH, adrH &H) {
+    if (LH.firstHero != NULL && precH != LH.lastHero) {
+        H = precH->nextHero;
+        if (H == LH.lastHero) {
+            deleteLastHero(LH,H);
+        } else {
+            precH->nextHero = H->nextHero;
+            H->nextHero = NULL;
+        }
+    }
+}
+
+void deleteHero (listRole &LR, listHero &LH) {
+    int X;
+    cout<<"Masukkan ID Hero yang akan dihapus: "; cin>>X;
+    cleanRelation(LR,X);
+    adrH H = searchIDhero(LH,X);
+    if (H != NULL) {
+        if (H == LH.firstHero) {
+            deleteFirstHero(LH,H);
+        } else if (H == LH.lastHero) {
+            deleteLastHero(LH,H);
+        } else {
+            adrH P = LH.firstHero;
+            while (P->nextHero != H) {
+                P = P->nextHero;
+            }
+            deleteAfterHero(LH,P,H);
+        }
+    } else {
+        cout<<"Hero not found"<<endl;
+    }
+}
 
 /** SEARCH*/
 adrR searchIDrole (listRole LR, int ID) {
@@ -428,4 +543,20 @@ bool duplicateCheckHero (listHero LH, adrH H) {
         P = P->nextHero;
     }
     return false;
+}
+
+void cleanRelation (listRole &LR, int ID) {
+    adrR R = LR.firstRole;
+    while (R != NULL) {
+        adrE E = R->Relate.firstRelate;
+        while (E != NULL) {
+            adrH H = E->toHero;
+            if (H->IDh == ID) {
+                deleteRelation(R,E);
+                deallocateRelation(E);
+            }
+            E = E->nextRelate;
+        }
+        R = R->nextRole;
+    }
 }

@@ -18,6 +18,7 @@
 #define toHero(E)       E->toHero
 
 #include <iostream>
+#include <conio.h>
 using namespace std;
 
 typedef struct Role *adrR;
@@ -82,19 +83,19 @@ void insertRole (listRole &LR);
 void deleteFirstRole (listRole &LR, adrR &R);
 void deleteLastRole (listRole &LR, adrR &R);
 void deleteAfterRole (listRole &LR, adrR precR, adrR &R);
-void deleteRole ();
+void deleteRole (listRole &LR);
 
 /** INSERT HERO */
 void insertFirstHero (listHero &LH, adrH H);
 void insertLastHero (listHero &LH, adrH H);
 void insertAfterHero (listHero &LH, adrH precH, adrH H);
-void insertHero ();
+void insertHero (listHero &LH);
 
 /** DELETE HERO */
 void deleteFirstHero (listHero &LH, adrH &H);
 void deleteLastHero (listHero &LH, adrH &H);
 void deleteAfterHero (listHero &LH, adrH precH, adrH &H);
-void deleteHero ();
+void deleteHero (listRole &LR, listHero &LH);
 
 /** SEARCH*/
 adrR searchIDrole (listRole LR, int ID);
@@ -128,5 +129,6 @@ void disConnect (listRole &LR);
 /** MISC */
 bool duplicateCheckRole (listRole LR, adrR R);
 bool duplicateCheckHero (listHero LH, adrH H);
+void cleanRelation (listRole &LR, int ID);
 
 #endif // MULTI_H_INCLUDED

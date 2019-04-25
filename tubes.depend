@@ -1,10 +1,27 @@
 # depslib dependency file v1.0
-1514140574 source:c:\users\user\documents\github\tubes\main.cpp
+1556200187 source:c:\users\user\documents\github\tubes\main.cpp
+	"multi.h"
 	<iostream>
 
-1556074260 source:c:\users\user\documents\github\tubes\multi.cpp
+1556204244 source:c:\users\user\documents\github\tubes\multi.cpp
 	"multi.h"
 
-1556074410 c:\users\user\documents\github\tubes\multi.h
+1556205336 c:\users\user\documents\github\tubes\multi.h
+	<iostream>
+	<conio.h>
+
+1556204914 c:\users\user\documents\github\tubes\role.h
+	<iostream>
+	<stdlib.h>
+	"multi.h"
+
+1556205025 c:\users\user\documents\github\tubes\hero.h
+	<iostream>
+	<stdlib.h>
+	"role.h"
+
+1556203986 c:\users\user\documents\github\tubes\relation.h
+	"role.h"
+	"hero.h"
 	<iostream>
 
