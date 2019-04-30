@@ -560,3 +560,37 @@ void cleanRelation (listRole &LR, int ID) {
         R = R->nextRole;
     }
 }
+
+int countHero(listHero LH){
+    adrR P = searchIDrole(LR, IDr);
+    int jumlah = 0;
+    if (P != NULL){
+        adrH Q = LH.firstHero;
+        while (Q != NULL){
+            jumlah++;
+            Q = H->nextHero;
+        }
+    }
+    return jumlah;
+}
+
+int countRole(listRole LR){
+    adrR P = LR.firstRole;
+    int total = 0;
+    while (P != NULL){
+        total++;
+        Q = R->nextRole;
+    }
+    return total;
+}
+
+int avarageHero(listHero LH){
+    adrR P = searchIDrole(LR, IDr);
+    int avg = 0;
+    if (P != NULL){
+        int jumlah = countHero(LH);
+    }
+    int total = countRole(LR);
+    avg = jumlah / total;
+    return avg;
+}
