@@ -27,8 +27,8 @@ int main() {
                 insertRole(LR);
                 break;
             case 2 :
-  //              createListHero(LH);
-//                insertHero(heroAllocation(IDh, hero));
+                createListHero(LH);
+                insertHero(LH);
                 break;
             case 3 :
                 displayAll(LR);
