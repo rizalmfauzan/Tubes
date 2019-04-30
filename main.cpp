@@ -9,11 +9,6 @@ Role IDr, R;
 string role, hero;
 int main() {
     createListRole(LR);
-    insertRole(roleAllocation(1, "support"));
-    insertRole(roleAllocation(2, "initiator"));
-    insertRole(roleAllocation(3, "carry"));
-    insertRole(roleAllocation(4, "disabler"));
-    insertRole(roleAllocation(5, "melee"));
     int choice;
     do {
         cout<<"==============================================="<<endl;
@@ -29,11 +24,11 @@ int main() {
         cin >> choice;
         switch(choice) {
             case 1 :
-                insertRole(roleAllocation(IDr, role));
+                insertRole(LR);
                 break;
             case 2 :
-                createListHero(LH);
-                insertHero(heroAllocation(IDh, hero));
+  //              createListHero(LH);
+//                insertHero(heroAllocation(IDh, hero));
                 break;
             case 3 :
                 displayAll(LR);
